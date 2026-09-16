@@ -1,0 +1,56 @@
+# Node & Dependency directories
+node_modules/
+.pnpm-store/
+jspm_packages/
+.npm/
+
+# Environment variable files (Security)
+.env
+.env.local
+.env.development
+.env.production
+.env.staging
+*.env
+
+# Local SQLite Database files (Ephemeral/Dynamic runtime data)
+server/database/*.sqlite
+server/database/*.sqlite-journal
+server/database/*.db
+server/database/*.db-journal
+
+# Uploaded Files & Generated Assets (Dynamic runtime data)
+server/storage/newspapers/*
+!server/storage/newspapers/.gitkeep
+server/public/thumbnails/*
+!server/public/thumbnails/.gitkeep
+
+# Build and Output directories
+client/dist/
+client/build/
+dist/
+build/
+.next/
+.out/
+
+# Log files
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS & Editor metadata
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

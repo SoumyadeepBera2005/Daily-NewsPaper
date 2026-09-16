@@ -1,0 +1,77 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@layer base {
+  body {
+    background-color: #F7F9FC;
+    color: #172033;
+  }
+}
+
+/* Custom editorial card hover effect */
+.newspaper-card {
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.newspaper-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px -6px rgba(79, 70, 229, 0.12), 0 4px 8px -4px rgba(0, 0, 0, 0.04);
+}
+
+/* Reader canvas scrollbar styling */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #F1F5F9;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 9999px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
+}
+
+/* Anti-Copy, Anti-Selection & Anti-Print protection rules */
+.reader-container, .no-copy, canvas {
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  -webkit-touch-callout: none !important;
+}
+
+/* Watermark background repetition */
+.watermark-overlay {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    rgba(255, 255, 255, 0.04),
+    rgba(255, 255, 255, 0.04) 120px,
+    transparent 120px,
+    transparent 240px
+  );
+}
+
+/* Anti-Print Protection: Hides page content if user attempts Ctrl+P or print PDF */
+@media print {
+  html, body, #root, .reader-container {
+    display: none !important;
+    visibility: hidden !important;
+  }
+  body::before {
+    content: "PROTECTED CONTENT: Direct printing or PDF generation of newspaper editions is restricted.";
+    display: block !important;
+    font-size: 20px;
+    font-weight: bold;
+    color: #DC2626;
+    text-align: center;
+    padding: 50px;
+  }
+}

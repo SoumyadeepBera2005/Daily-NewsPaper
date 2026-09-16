@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <defs>
+    <linearGradient id="logoBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4F46E5" />
+      <stop offset="100%" stop-color="#3730A3" />
+    </linearGradient>
+    <linearGradient id="accentGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38BDF8" />
+      <stop offset="100%" stop-color="#0EA5E9" />
+    </linearGradient>
+  </defs>
+  <!-- Rounded Squircle Base -->
+  <rect width="512" height="512" rx="128" fill="url(#logoBg)" />
+  <!-- Newspaper Front Page Lines -->
+  <rect x="112" y="112" width="288" height="288" rx="32" fill="#FFFFFF" />
+  <rect x="152" y="152" width="128" height="24" rx="6" fill="#4F46E5" />
+  <rect x="296" y="152" width="64" height="24" rx="6" fill="url(#accentGlow)" />
+  <rect x="152" y="196" width="208" height="12" rx="4" fill="#64748B" />
+  <rect x="152" y="220" width="176" height="12" rx="4" fill="#94A3B8" />
+  <!-- Main Headlines & Columns -->
+  <rect x="152" y="252" width="96" height="100" rx="8" fill="#EEF2FF" />
+  <rect x="264" y="252" width="96" height="12" rx="4" fill="#334155" />
+  <rect x="264" y="274" width="96" height="12" rx="4" fill="#64748B" />
+  <rect x="264" y="296" width="80" height="12" rx="4" fill="#94A3B8" />
+  <rect x="264" y="318" width="88" height="12" rx="4" fill="#CBD5E1" />
+  <rect x="264" y="340" width="64" height="12" rx="4" fill="#4F46E5" />
+</svg>
