@@ -147,7 +147,7 @@ export default function UploadNewspaper() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-8">
-      
+
       <div>
         <h1 className="text-2xl font-extrabold text-gray-900 font-serif">Add Newspapers</h1>
         <p className="text-xs text-gray-500 mt-1">Auto-sync daily PDFs from Google Drive folder or upload manually</p>
@@ -157,11 +157,10 @@ export default function UploadNewspaper() {
       <div className="flex items-center gap-3 bg-white p-2 rounded-2xl border border-gray-100 shadow-sm">
         <button
           onClick={() => { setActiveTab('drive'); setError(''); setSuccess(false); }}
-          className={`flex-1 py-3 px-4 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-colors ${
-            activeTab === 'drive'
-              ? 'bg-brand-600 text-white shadow-md shadow-brand-600/20'
-              : 'text-gray-600 hover:bg-gray-50'
-          }`}
+          className={`flex-1 py-3 px-4 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-colors ${activeTab === 'drive'
+            ? 'bg-brand-600 text-white shadow-md shadow-brand-600/20'
+            : 'text-gray-600 hover:bg-gray-50'
+            }`}
         >
           <FolderSync className="w-4 h-4" />
           <span>Google Drive Auto-Sync (Recommended)</span>
@@ -169,11 +168,10 @@ export default function UploadNewspaper() {
 
         <button
           onClick={() => { setActiveTab('manual'); setError(''); setSuccess(false); }}
-          className={`flex-1 py-3 px-4 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-colors ${
-            activeTab === 'manual'
-              ? 'bg-brand-600 text-white shadow-md shadow-brand-600/20'
-              : 'text-gray-600 hover:bg-gray-50'
-          }`}
+          className={`flex-1 py-3 px-4 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-colors ${activeTab === 'manual'
+            ? 'bg-brand-600 text-white shadow-md shadow-brand-600/20'
+            : 'text-gray-600 hover:bg-gray-50'
+            }`}
         >
           <UploadCloud className="w-4 h-4" />
           <span>Manual PDF Upload</span>
@@ -294,15 +292,14 @@ export default function UploadNewspaper() {
       {/* Tab 2: Manual PDF Upload Form */}
       {activeTab === 'manual' && (
         <form onSubmit={handleManualSubmit} className="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm space-y-6">
-          
+
           <div
             onDragOver={e => { e.preventDefault(); setDragOver(true); }}
             onDragLeave={() => setDragOver(false)}
             onDrop={handleFileDrop}
             onClick={() => fileInputRef.current?.click()}
-            className={`border-2 border-dashed rounded-3xl p-8 text-center cursor-pointer transition-colors ${
-              dragOver ? 'border-brand-500 bg-brand-50/50' : 'border-gray-200 bg-slate-50/50 hover:bg-slate-50'
-            }`}
+            className={`border-2 border-dashed rounded-3xl p-8 text-center cursor-pointer transition-colors ${dragOver ? 'border-brand-500 bg-brand-50/50' : 'border-gray-200 bg-slate-50/50 hover:bg-slate-50'
+              }`}
           >
             <input
               type="file"
@@ -341,7 +338,7 @@ export default function UploadNewspaper() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            
+
             <div className="sm:col-span-2">
               <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
                 Newspaper Title *

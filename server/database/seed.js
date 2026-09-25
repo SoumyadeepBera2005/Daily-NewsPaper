@@ -247,57 +247,72 @@ async function seed() {
     }
   ];
 
-  await db.run('DELETE FROM newspapers');
+  const forceSeed = process.argv.includes('--force');
+  const existingCount = await db.get('SELECT COUNT(*) as count FROM newspapers');
 
-  for (const item of sampleEditions) {
-    const pdfBuf = await createValidPdfBuffer(item.title, item.pages);
-    const pdfFilePath = path.join(storageDir, item.filename);
-    fs.writeFileSync(pdfFilePath, pdfBuf);
+  if (existingCount.count === 0 || forceSeed) {
+    if (forceSeed) {
+      await db.run('DELETE FROM newspapers');
+      console.log('🧹 Cleared existing newspapers (--force flag present)');
+    }
 
-    await db.run(
-      `INSERT INTO newspapers 
-      (title, language_id, category_id, edition_date, description, publisher, source_type, pdf_storage_key, thumbnail_url, page_count, status, views_count)
-      VALUES (?, ?, ?, ?, ?, ?, 'MANUAL_UPLOAD', ?, '/thumbnails/default_newspaper.png', ?, 'PUBLISHED', ?)`,
-      [
-        item.title,
-        item.language_id,
-        item.category_id,
-        item.edition_date,
-        item.description,
-        item.publisher,
-        item.filename,
-        item.pages,
-        Math.floor(Math.random() * 150) + 12
-      ]
-    );
+    for (const item of sampleEditions) {
+      const pdfBuf = await createValidPdfBuffer(item.title, item.pages);
+      const pdfFilePath = path.join(storageDir, item.filename);
+      fs.writeFileSync(pdfFilePath, pdfBuf);
+
+      await db.run(
+        `INSERT INTO newspapers 
+        (title, language_id, category_id, edition_date, description, publisher, source_type, pdf_storage_key, thumbnail_url, page_count, status, views_count)
+        VALUES (?, ?, ?, ?, ?, ?, 'MANUAL_UPLOAD', ?, '/thumbnails/default_newspaper.png', ?, 'PUBLISHED', ?)`,
+        [
+          item.title,
+          item.language_id,
+          item.category_id,
+          item.edition_date,
+          item.description,
+          item.publisher,
+          item.filename,
+          item.pages,
+          Math.floor(Math.random() * 150) + 12
+        ]
+      );
+    }
+    console.log('✅ Sample PDF newspapers seeded');
+  } else {
+    console.log(`ℹ Database already contains ${existingCount.count} newspapers. Preserving existing uploaded editions (use --force to overwrite).`);
   }
-  console.log('✅ Valid PDF newspapers generated and seeded');
 
   // 5. News Sources
-  await db.run('DELETE FROM news_sources');
-  await db.run('INSERT INTO news_sources (name, type, url, language_id, active) VALUES (?, ?, ?, ?, 1)', [
-    'Press Information Bureau (PIB) English', 'RSS', 'https://pib.gov.in/RssMain.aspx?ModId=6&Lang=1', enLang.id
-  ]);
-  await db.run('INSERT INTO news_sources (name, type, url, language_id, active) VALUES (?, ?, ?, ?, 1)', [
-    'PIB Bengali Feed', 'RSS', 'https://pib.gov.in/RssMain.aspx?ModId=6&Lang=3', bnLang.id
-  ]);
-  console.log('✅ News sources seeded');
+  const existingSources = await db.get('SELECT COUNT(*) as count FROM news_sources');
+  if (existingSources.count === 0 || forceSeed) {
+    if (forceSeed) await db.run('DELETE FROM news_sources');
+    await db.run('INSERT INTO news_sources (name, type, url, language_id, active) VALUES (?, ?, ?, ?, 1)', [
+      'Press Information Bureau (PIB) English', 'RSS', 'https://pib.gov.in/RssMain.aspx?ModId=6&Lang=1', enLang.id
+    ]);
+    await db.run('INSERT INTO news_sources (name, type, url, language_id, active) VALUES (?, ?, ?, ?, 1)', [
+      'PIB Bengali Feed', 'RSS', 'https://pib.gov.in/RssMain.aspx?ModId=6&Lang=3', bnLang.id
+    ]);
+    console.log('✅ News sources seeded');
+  }
 
   // 6. UPSC Articles
-  await db.run('DELETE FROM upsc_articles');
-  await db.run(
-    `INSERT INTO upsc_articles 
-    (title, summary, category, source_url, published_date, prelims_points, mains_analysis, tags, status)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'PUBLISHED')`,
-    [
-      'India-ASEAN Digital Work Plan 2026 Endorsed for Tech Infrastructure',
-      'The 5th ASEAN-India Digital Ministers Meeting approved the Joint Work Plan focusing on AI safety, cyber resilience, and cross-border digital payments.',
-      'Top News',
-      'https://pib.gov.in',
-      todayStr,
-      '• ASEAN founded in 1967 (Bangkok Declaration).\n• 10 Member States.\n• India is a Dialogue Partner since 1996.',
-      'Examine how ASEAN-India digital partnership enhances Indias Act East policy and offsets strategic digital monopolies in the Indo-Pacific region.',
-      'ASEAN, Digital India, International Relations, GS-2'
+  const existingUpsc = await db.get('SELECT COUNT(*) as count FROM upsc_articles');
+  if (existingUpsc.count === 0 || forceSeed) {
+    if (forceSeed) await db.run('DELETE FROM upsc_articles');
+    await db.run(
+      `INSERT INTO upsc_articles 
+      (title, summary, category, source_url, published_date, prelims_points, mains_analysis, tags, status)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'PUBLISHED')`,
+      [
+        'India-ASEAN Digital Work Plan 2026 Endorsed for Tech Infrastructure',
+        'The 5th ASEAN-India Digital Ministers Meeting approved the Joint Work Plan focusing on AI safety, cyber resilience, and cross-border digital payments.',
+        'Top News',
+        'https://pib.gov.in',
+        todayStr,
+        '• ASEAN founded in 1967 (Bangkok Declaration).\n• 10 Member States.\n• India is a Dialogue Partner since 1996.',
+        'Examine how ASEAN-India digital partnership enhances Indias Act East policy and offsets strategic digital monopolies in the Indo-Pacific region.',
+        'ASEAN, Digital India, International Relations, GS-2'
     ]
   );
   await db.run(
@@ -315,7 +330,8 @@ async function seed() {
       'RBI, Green Finance, Economy, GS-3'
     ]
   );
-  console.log('✅ UPSC Daily Brief seeded');
+    console.log('✅ UPSC Daily Brief seeded');
+  }
   console.log('🎉 Seed completed successfully!');
   process.exit(0);
 }

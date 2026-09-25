@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "node app.js",
-    "dev": "node --watch app.js",
+    "dev": "node --watch --watch-path=app.js --watch-path=controllers --watch-path=middleware --watch-path=services --watch-path=config app.js",
     "seed": "node database/seed.js"
   },
   "dependencies": {
