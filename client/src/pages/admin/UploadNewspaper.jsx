@@ -50,9 +50,13 @@ export default function UploadNewspaper() {
     setLoginLoading(true);
     setError('');
     try {
-      await login('admin@dailynewshub.com', 'admin123');
+      await login('admin@dailynewshub.com', 'Admin@123456');
     } catch (err) {
-      setError('Admin login failed: ' + err.message);
+      try {
+        await login('soumyadeepbera911@gmail.com', 'Soumyadeep@2026');
+      } catch (err2) {
+        setError('Admin login failed: ' + err2.message);
+      }
     } finally {
       setLoginLoading(false);
     }

@@ -26,7 +26,7 @@ export const register = async (req, res) => {
     );
 
     const user = { id: result.lastID, name: name.trim(), email: email.toLowerCase().trim(), role: userRole };
-    const token = jwt.sign({ id: user.id, role: user.role }, JWT_SECRET, { expiresIn: '7d' });
+    const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, JWT_SECRET, { expiresIn: '7d' });
 
     res.status(201).json({ message: 'Registration successful', token, user });
   } catch (error) {
@@ -54,7 +54,7 @@ export const login = async (req, res) => {
     }
 
     const userData = { id: user.id, name: user.name, email: user.email, role: user.role };
-    const token = jwt.sign({ id: user.id, role: user.role }, JWT_SECRET, { expiresIn: '7d' });
+    const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, JWT_SECRET, { expiresIn: '7d' });
 
     res.json({ message: 'Login successful', token, user: userData });
   } catch (error) {

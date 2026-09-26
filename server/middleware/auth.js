@@ -18,9 +18,12 @@ export async function authenticateToken(req, res, next) {
     
     try {
       const db = await getDb();
-      const user = await db.get('SELECT id, name, email, role FROM users WHERE id = ?', [userPayload.id]);
+      let user = await db.get('SELECT id, name, email, role FROM users WHERE id = ?', [userPayload.id]);
+      if (!user && userPayload.email) {
+        user = await db.get('SELECT id, name, email, role FROM users WHERE email = ?', [userPayload.email]);
+      }
       if (!user) {
-        return res.status(401).json({ error: 'User account no longer exists' });
+        return res.status(401).json({ error: 'User account no longer exists. Please log out and log back in.' });
       }
 
       req.user = user;
