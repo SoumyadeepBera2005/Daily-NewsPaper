@@ -21,20 +21,35 @@ export const getTodayNewspapers = async (req, res) => {
       ORDER BY n.created_at DESC
     `;
 
-    const newspapers = await db.all(query, [todayStr]);
+    let newspapers = await db.all(query, [todayStr]);
 
     if (newspapers.length === 0) {
-      const fallbackQuery = `
+      // Find the most recent edition date in database
+      const latestDateRow = await db.get("SELECT MAX(edition_date) as max_date FROM newspapers WHERE status = 'PUBLISHED'");
+      
+      if (latestDateRow && latestDateRow.max_date) {
+        const fallbackQuery = `
+          SELECT n.*, l.name as language_name, l.code as language_code, l.native_name as language_native_name, c.name as category_name, c.slug as category_slug
+          FROM newspapers n
+          JOIN languages l ON n.language_id = l.id
+          JOIN categories c ON n.category_id = c.id
+          WHERE n.edition_date = ? AND n.status = 'PUBLISHED'
+          ORDER BY n.created_at DESC
+        `;
+        const fallback = await db.all(fallbackQuery, [latestDateRow.max_date]);
+        return res.json({ newspapers: fallback, isFallback: true, fallbackDate: latestDateRow.max_date });
+      }
+
+      // Final fallback if no dated rows exist
+      const generalFallback = await db.all(`
         SELECT n.*, l.name as language_name, l.code as language_code, l.native_name as language_native_name, c.name as category_name, c.slug as category_slug
         FROM newspapers n
         JOIN languages l ON n.language_id = l.id
         JOIN categories c ON n.category_id = c.id
         WHERE n.status = 'PUBLISHED'
-        ORDER BY n.edition_date DESC, n.created_at DESC
-        LIMIT 10
-      `;
-      const fallback = await db.all(fallbackQuery);
-      return res.json({ newspapers: fallback, isFallback: true });
+        ORDER BY n.created_at DESC
+      `);
+      return res.json({ newspapers: generalFallback, isFallback: true });
     }
 
     res.json({ newspapers, isFallback: false });

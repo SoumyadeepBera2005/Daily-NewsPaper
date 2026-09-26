@@ -11,6 +11,7 @@ export default function Home() {
   const navigate = useNavigate();
   const [todayNewspapers, setTodayNewspapers] = useState([]);
   const [isFallback, setIsFallback] = useState(false);
+  const [fallbackDate, setFallbackDate] = useState('');
   const [languages, setLanguages] = useState([]);
   const [upscBrief, setUpscBrief] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -26,6 +27,7 @@ export default function Home() {
 
         setTodayNewspapers(todayRes.newspapers || []);
         setIsFallback(todayRes.isFallback || false);
+        setFallbackDate(todayRes.fallbackDate || '');
         setLanguages(langRes || []);
         setUpscBrief(upscRes || null);
       } catch (err) {
@@ -151,7 +153,7 @@ export default function Home() {
               <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 font-serif">Today's Newspapers</h2>
               {isFallback && (
                 <span className="text-xs font-medium bg-amber-50 text-amber-700 px-2.5 py-1 rounded-full border border-amber-200">
-                  Latest Available Editions
+                  {fallbackDate ? `Latest Edition (${fallbackDate})` : 'Latest Available Editions'}
                 </span>
               )}
             </div>
